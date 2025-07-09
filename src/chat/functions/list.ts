@@ -82,7 +82,9 @@ export async function list(
   const direction = options.direction === 'before' ? 'before' : 'after';
 
   // Getting All Chats.
-  // IDK, why we use slice here. don't think its needed.
+  // The slice is used to duplicate the array that comes directly from the internal 
+  // module as a reference, modifying it later as happens here without the slice 
+  // would modify the internal modules of WhatsApp.
   let models = options.onlyNewsletter
     ? NewsletterStore.getModelsArray().slice()
     : ChatStore.getModelsArray().slice();
