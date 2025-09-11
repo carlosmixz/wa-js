@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { getMyUserId } from '../../conn';
+import { getMyUserWid } from '../../conn/functions/getMyUserWid';
 import { ProfilePicThumbModel, ProfilePicThumbStore } from '../../whatsapp';
 
 /**
@@ -29,7 +29,7 @@ import { ProfilePicThumbModel, ProfilePicThumbStore } from '../../whatsapp';
  */
 
 export async function getMyProfilePicture(): Promise<ProfilePicThumbModel> {
-  const pic = await ProfilePicThumbStore.find(getMyUserId());
-
+  const user = getMyUserWid();
+  const pic = await ProfilePicThumbStore.find(user);
   return pic;
 }

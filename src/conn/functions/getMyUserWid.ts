@@ -14,23 +14,22 @@
  * limitations under the License.
  */
 
-import { getMessageById } from '../../chat';
-import { WPPError } from '../../util';
-import { MsgKey, StatusV3Store, UserPrefs } from '../../whatsapp';
-import { revokeStatus } from '../../whatsapp/functions';
+import { UserPrefs, Wid } from '../../whatsapp';
 
-export async function remove(msgId: string | MsgKey): Promise<boolean> {
-  const msg = await getMessageById(msgId);
-  try {
-    await revokeStatus(
-      StatusV3Store.get(UserPrefs.getMaybeMePnUser()) as any,
-      msg
-    );
-    return true;
-  } catch (error) {
-    throw new WPPError(
-      'error_on_remove_status',
-      `Error on remove status with id ${msgId.toString()}`
-    );
-  }
+/**
+ * Return the current logged user ID without device id
+ *
+ * @example
+ * ```javascript
+ * const wid = WPP.conn.getMyUserId();
+ * console.log(wid.toString()); // Output: 123@c.us
+ * ```
+ */
+export function getMyUserWid(): Wid {
+  const user =
+    typeof UserPrefs.getMaybeMeUser === 'function'
+      ? UserPrefs.getMaybeMeUser()
+      : UserPrefs.getMaybeMePnUser();
+
+  return user;
 }

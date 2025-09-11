@@ -15,6 +15,7 @@
  */
 
 import { UserPrefs, Wid } from '../../whatsapp';
+import { getMyUserWid } from './getMyUserWid';
 
 /**
  * Return the current logged user ID with device id
@@ -26,13 +27,7 @@ import { UserPrefs, Wid } from '../../whatsapp';
  * ```
  */
 export function getMyDeviceId(): Wid | undefined {
-  /**
-   * @description
-   * Validates if the function exists for compatibility with previous versions of WhatsApp Web
-   **/
-  if (typeof UserPrefs.getMaybeMePnUser === 'function') {
-    return UserPrefs.getMaybeMePnUser();
-  } else {
-    return UserPrefs.getMe(); // maintain compatibility with older versions of WhatsApp Web
-  }
+  const user = getMyUserWid();
+
+  return user ? user : UserPrefs.getMe();
 }

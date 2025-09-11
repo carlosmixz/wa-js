@@ -1,5 +1,5 @@
 /*!
- * Copyright 2021 WPPConnect Team
+ * Copyright 2025 WPPConnect Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,13 +21,14 @@ import { Wid } from './Wid';
  * @whatsapp 459857 >= 2.2310.5
  */
 export declare namespace UserPrefs {
-  function getMeDevicePn(...args: any[]): any;
+  function getMaybeMeDevicePn(...args: any[]): any;
   function assertGetMe(): Wid;
   function assertGetMeUser(): Wid;
-  function clearGetMaybeMeUserCache(...args: any[]): any;
+  function clearGetMaybeMePnUserCache(...args: any[]): any;
   function getMaybeMeDisplayName(...args: any[]): any;
-  function getMaybeMeLid(...args: any[]): any;
+  function getMaybeMeDeviceLid(...args: any[]): any;
   function getMaybeMeLidUser(...args: any[]): any;
+  function getMaybeMePnUser(): Wid;
   function getMaybeMeUser(): Wid;
   function getMePNandLIDWids(...args: any[]): any;
   function getMeUser(): Wid;
@@ -43,9 +44,70 @@ export declare namespace UserPrefs {
 
   /**
    * @deprecated
+   */
+  function clearGetMaybeMeUserCache(...args: any[]): any;
+  /**
+   * @deprecated
+   */
+  function getMeDevicePn(...args: any[]): any;
+  /**
+   * @deprecated
+   */
+  function getMaybeMeLid(...args: any[]): any;
+
+  /**
+   * @deprecated
    * @whatsapp 498050 >= 2.3000.1026
    **/
   function getMe(...args: any[]): any;
 }
 
-exportModule(exports, 'UserPrefs', (m) => m.setMeLid);
+exportModule(exports, 'UserPrefs', (m: any) => {
+  const hasNew = typeof m?.getMaybeMePnUser === 'function';
+  const hasOld = typeof m?.getMaybeMeUser === 'function';
+  if (!hasNew && !hasOld) return false; // não exporta se nenhuma existir
+
+  try {
+    // se houver prop com tipo errado, apaga antes de setar
+    if (
+      m &&
+      typeof m.getMaybeMeUser !== 'function' &&
+      //eslint-disable-next-line no-prototype-builtins
+      m.hasOwnProperty?.('getMaybeMeUser')
+    ) {
+      try {
+        delete m.getMaybeMeUser;
+      } catch {}
+    }
+    if (
+      m &&
+      typeof m.getMaybeMePnUser !== 'function' &&
+      //eslint-disable-next-line no-prototype-builtins
+      m.hasOwnProperty?.('getMaybeMePnUser')
+    ) {
+      try {
+        delete m.getMaybeMePnUser;
+      } catch {}
+    }
+
+    if (hasNew && !hasOld) {
+      Object.defineProperty(m, 'getMaybeMeUser', {
+        value: m.getMaybeMePnUser.bind(m),
+        configurable: true,
+        writable: true,
+      });
+    } else if (hasOld && !hasNew) {
+      Object.defineProperty(m, 'getMaybeMePnUser', {
+        value: m.getMaybeMeUser.bind(m),
+        configurable: true,
+        writable: true,
+      });
+    }
+  } catch {
+    // silencioso: alguns módulos podem ser proxies/selados
+  }
+
+  // Alguns loaders usam o valor de retorno só como "truthy".
+  // Retorne 'true' ou o próprio 'm' — ambos funcionam.
+  return true;
+});

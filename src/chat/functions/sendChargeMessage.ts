@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { getMyUserId } from '../../conn';
+import { getMyUserWid } from '../../conn/functions/getMyUserWid';
 import { generateOrderUniqueId, WPPError } from '../../util';
-import { CatalogStore } from '../../whatsapp';
+import { CatalogStore, UserPrefs } from '../../whatsapp';
 import {
   currencyForCountryShortcode,
   getCountryShortcodeByPhone,
@@ -113,11 +113,13 @@ export async function sendChargeMessage(
   let subtotal = 0;
   let thumbDefault = null;
 
-  const catalog = CatalogStore.get(getMyUserId());
+  const user = getMyUserWid();
+
+  const catalog = CatalogStore.get(user);
   for (const product of items) {
     if (product.type == 'product') {
       const { data } = await queryProduct(
-        getMyUserId(),
+        user,
         product.id,
         100,
         100,
@@ -178,7 +180,7 @@ export async function sendChargeMessage(
     type: 'physical-goods',
     payment_configuration: 'merchant_categorization_code',
     currency: await currencyForCountryShortcode(
-      await getCountryShortcodeByPhone(getMyUserId().user)
+      await getCountryShortcodeByPhone(UserPrefs.getMaybeMePnUser().user)
     ),
     total_amount: {
       value: total_amount,

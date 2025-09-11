@@ -16,7 +16,7 @@
 
 import { assertWid } from '../../assert';
 import { sendFileMessage } from '../../chat';
-import { getMyUserId } from '../../conn';
+import { getMyUserWid } from '../../conn/functions/getMyUserWid';
 import { MsgKey } from '../../whatsapp';
 import { randomHex } from '../../whatsapp/functions';
 import { defaultSendStatusOptions } from '..';
@@ -36,10 +36,12 @@ export async function sendImageStatus(
   content: any,
   options: ImageStatusOptions = {}
 ): Promise<any> {
+  const me = getMyUserWid();
+
   const messageId = new MsgKey({
     fromMe: true,
     id: randomHex(16),
-    participant: getMyUserId(),
+    participant: me,
     remote: assertWid('status@broadcast'),
   });
 

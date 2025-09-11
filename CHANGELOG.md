@@ -1,9 +1,9 @@
-## 3.18.2 (2025-08-29)
+## 3.18.4 (2025-09-09)
 
 
 ### Bug Fixes
 
-* Fixed getMyDeviceId >= 2.3000.1026498050 ([#2869](https://github.com/wppconnect-team/wa-js/issues/2869)) ([56ee7de](https://github.com/wppconnect-team/wa-js/commit/56ee7de458fcd62ef59409cd307b1cc5ef9d76ec))
+* Fixed WidFactory.toUserWid ([#2882](https://github.com/wppconnect-team/wa-js/issues/2882)) ([e1bd67e](https://github.com/wppconnect-team/wa-js/commit/e1bd67ea5eadb573bcaecd0efcd22bb09878107f))
 
 
 

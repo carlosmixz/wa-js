@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { getMyUserId } from '../../conn';
+import { getMyUserWid } from '../../conn/functions/getMyUserWid';
 import { WPPError } from '../../util';
 import { CallModel, CallStore, websocket } from '../../whatsapp';
 import { CALL_STATES } from '../../whatsapp/enums';
@@ -89,7 +89,7 @@ export async function reject(callId?: string): Promise<boolean> {
   const node = websocket.smax(
     'call',
     {
-      from: getMyUserId().toString({ legacy: true }),
+      from: getMyUserWid().toString({ legacy: true }),
       to: call.peerJid.toString({ legacy: true }),
       id: websocket.generateId(),
     },

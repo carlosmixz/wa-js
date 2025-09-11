@@ -15,7 +15,7 @@
  */
 
 import { assertWid } from '../../assert';
-import { getMyUserId } from '../../conn';
+import { getMyUserWid } from '../../conn/functions/getMyUserWid';
 import { getParticipants } from '../../group';
 import { WPPError } from '../../util';
 import {
@@ -58,7 +58,7 @@ export async function prepareRawMessage<T extends RawMessage>(
 
   message = {
     t: unixTime(),
-    from: getMyUserId(),
+    from: getMyUserWid(),
     to: chat.id,
     self: 'out',
     isNewMsg: true,

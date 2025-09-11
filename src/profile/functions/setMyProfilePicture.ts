@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { getMyUserId } from '../../conn';
+import { getMyUserWid } from '../../conn/functions/getMyUserWid';
 import { blobToBase64, convertToFile, resizeImage } from '../../util';
 import { sendSetPicture } from '../../whatsapp/functions';
 
@@ -55,6 +55,5 @@ export async function setMyProfilePicture(content: string): Promise<{
   const thumbBase64 = await blobToBase64(thumbFile);
   const pictureBase64 = await blobToBase64(pictureFile);
 
-  const me = getMyUserId();
-  return sendSetPicture(me, thumbBase64, pictureBase64);
+  return sendSetPicture(getMyUserWid(), thumbBase64, pictureBase64);
 }

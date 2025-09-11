@@ -15,7 +15,7 @@
  */
 
 import { assertWid } from '../../assert';
-import { getMyUserId } from '../../conn';
+import { getMyUserWid } from '../../conn/functions/getMyUserWid';
 import { ChatModel, MsgKey, Wid, WidFactory } from '../../whatsapp';
 import { randomMessageId } from '../../whatsapp/functions';
 
@@ -27,7 +27,7 @@ import { randomMessageId } from '../../whatsapp/functions';
 export async function generateMessageID(
   chat: string | ChatModel | Wid
 ): Promise<MsgKey> {
-  const from: Wid = getMyUserId();
+  const from = getMyUserWid();
   let to: Wid;
 
   if (chat instanceof Wid) {
@@ -41,7 +41,10 @@ export async function generateMessageID(
   let participant = undefined;
 
   if (to.isGroup()) {
-    const toUserWid = WidFactory.toUserWid || WidFactory.toUserWidOrThrow; // maintain compatibility with older versions of WhatsApp Web
+    const toUserWid =
+      WidFactory?.toUserWid ||
+      WidFactory?.toUserWidOrThrow ||
+      WidFactory?.createWid; // maintain compatibility with older versions of WhatsApp Web
     participant = toUserWid(from);
   }
 

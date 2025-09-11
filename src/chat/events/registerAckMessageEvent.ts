@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-import { getMyUserId } from '../../conn';
 import { internalEv } from '../../eventEmitter';
 import * as webpack from '../../webpack';
-import { MsgKey, MsgModel, MsgStore, Wid } from '../../whatsapp';
+import { MsgKey, MsgModel, MsgStore, UserPrefs, Wid } from '../../whatsapp';
 import { wrapModuleFunction } from '../../whatsapp/exportModule';
 import {
   handleChatSimpleReceipt,
@@ -50,7 +49,9 @@ function registerAckMessageEvent() {
 
     const remote = ackData.from;
     const fromMe =
-      !ackData.recipient || getMyUserId().equals(ackData.recipient);
+      !ackData.recipient ||
+      UserPrefs.getMeUser().equals(ackData.recipient) ||
+      UserPrefs.getMaybeMePnUser().equals(ackData.recipient);
 
     // Ignore non my messages ACK events
     if (!fromMe) {
