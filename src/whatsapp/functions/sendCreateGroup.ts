@@ -80,7 +80,7 @@ webpack.injectFallbackModule('sendCreateGroup', {
         }))
       ).then((e) => ({
         gid: e.wid,
-        participants: e.participants.map((e) => ({
+        participants: e.participants?.map((e) => ({
           userWid: e.wid,
           code: null != e.error ? e.error.toString() : '200',
           invite_code: e.invite_code,
@@ -101,7 +101,7 @@ webpack.injectFallbackModule('sendCreateGroup', {
         participants
       ).then((e) => ({
         gid: e.wid,
-        participants: e.participants.map((e) => ({
+        participants: e.participants?.map((e) => ({
           userWid: e.wid,
           code: null != e.error ? e.error.toString() : '200',
           invite_code: e.invite_code,
